@@ -6,7 +6,8 @@
 * Apellido: Fiandrino
 * Nombre: Maximiliano
 
-## Compilador: C11
+## Compilador
+* C11
 
 ## Enunciado:
 
@@ -40,9 +41,11 @@
 11. La última tarea es informar por email al profesor el usuario GitHub.
 
 ### 3.6. Productos
+~~~
 Usuario
-`-- SSL
+`--SSL
  `-- 00-CHelloWorld
  |-- readme.md
  |-- hello.c
- `-- output.txt 
+ `-- output.txt
+ ~~~
