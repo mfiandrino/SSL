@@ -7,7 +7,7 @@
 * Nombre: Maximiliano
 
 ## Compilador
-* C11
+* Standard C11
 
 ## Enunciado:
 
