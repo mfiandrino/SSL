@@ -1,3 +1,4 @@
 /pruebas
-/01-Interfaces/Makefile
-/01-Interfaces/Tabla
+/01-Interfaces/TablasDeConversion
+/01-Interfaces/ConversionTest
+/01-Interfaces/*.o

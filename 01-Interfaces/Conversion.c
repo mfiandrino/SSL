@@ -1,3 +1,8 @@
+/* Conversion.c
+ * Archivo de funciones para hacer pasajes C° a F° y viceversa y funciones para imprimir tablas de conversion
+ * Maximiliano Fiandrino
+ * 20210502
+ */
 #include <stdio.h>
 #include "Conversion.h"
 

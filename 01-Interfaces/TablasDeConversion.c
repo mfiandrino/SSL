@@ -1,3 +1,8 @@
+/* TablasDeConversion.c
+ * Archivo donde se ejecuta el programa principal. Imprime dos tablas de conversion
+ * Maximiliano Fiandrino
+ * 20210502
+ */
 #include <stdio.h>
 #include "Conversion.h"
 

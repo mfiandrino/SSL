@@ -1,3 +1,8 @@
+/* ConversionTest.c
+ * Archivo de pruebas de las funciones de conversión
+ * Maximiliano Fiandrino
+ * 20210502
+ */
 #include <stdio.h>
 #include <assert.h>
 #include "Conversion.h"
