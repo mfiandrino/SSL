@@ -17,7 +17,7 @@ double Fahrenheit (double c) //Celsius to Fahrenheit
 }
 
 
-void PrintFila(char tipoFila, double valor)
+static void PrintFila(char tipoFila, double valor)
 {
     if (tipoFila == 'c')
         printf("%3.0f | %5.1f\n", valor, Celsius(valor) );
@@ -27,20 +27,20 @@ void PrintFila(char tipoFila, double valor)
         printf("Error en el tipo de fila");
 }
 
-void PrintFilas(char tipoFila, const int LOWER, const int UPPER, const int STEP)
+static void PrintFilas(char tipoFila, const int LOWER, const int UPPER, const int STEP)
 {
     for(int valor = LOWER; valor <= UPPER; valor = valor + STEP)
         PrintFila(tipoFila,valor);
 }
 
 
-void PrintTablaCelsius(const int LOWER, const int UPPER, const int STEP)
+static void PrintTablaCelsius(const int LOWER, const int UPPER, const int STEP)
 {
     printf("\n\nTabla de Fahrenheit a Celsius\n\n F° |  C°\n------------\n");
     PrintFilas('c',LOWER,UPPER,STEP);
 }
 
-void PrintTablaFahrenheit(const int LOWER, const int UPPER, const int STEP)
+static void PrintTablaFahrenheit(const int LOWER, const int UPPER, const int STEP)
 {
     printf("\n\nTabla de Celsius a Fahrenheit\n\n C° |  F°\n------------\n");
     PrintFilas('f',LOWER,UPPER,STEP);
