@@ -1,5 +1,8 @@
 /pruebas
+
 /01-Interfaces/TablasDeConversion
 /01-Interfaces/ConversionTest
 /01-Interfaces/*.o
 /01-Interfaces/.vscode
+
+/02-FasesErrores/hello2.i
