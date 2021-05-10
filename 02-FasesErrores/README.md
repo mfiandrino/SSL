@@ -44,7 +44,7 @@ dejado por el paso anterior es necesario para el siguiente.
   * En el lugar del #include <stdio.h> el preprocesador copió y pegó los contratos o las declaraciones de todas las funciones y variables de stdio.h.  
   * Se pueden ver las declaraciones de las funciones de manejo de archivos como fwrite, fread, fseek, ftell, fclose, también la declaracion de puts, fputs, printf, fprintf, scanf, fscanf, getchar, getline que son todas funciones que venimos usando o usamos en algún momento y nunca vemos de donde salen, simplemente escribimos el #include.  
   * También se observa la declaración de tres variables de tipo FILE* que no son nada menos que el stdin, el stdout y e stderr.  
-  * Por otro lado el preprocesador reemplazo el comentario "/*medio*/" por un espacio entre las palabras int y main.    
+  * Por otro lado el preprocesador reemplazo el comentario "/\*medio\*/" por un espacio entre las palabras int y main.    
 
   Puedo concluir que el preprocesador no va a detectar errores de funciones mal escritas, falta de argumentos o llaves no cerradas, no es su función. El preprocesador se ocupa de traer de todos los includes los contratos o declaraciones de funciones y variables que estos tengan, de reemplazar comentarios por un espacio en blanco y también (aunque no lo hace en este caso) se ocupa de unir cadenas de caracteres que estan separadas por espacios sin nada entre sí. Por lo tanto es coherente que no haya errores en tiempo de preprocesamiento.  
        
@@ -82,7 +82,32 @@ dejado por el paso anterior es necesario para el siguiente.
 
   \<command-line> tampoco es realmente un archivo, es la línea de comandos del preprocesador, que se considera como otra fuente de definiciones de macros.  
       
-  Por último se ve en la quinta línea como esta vez si comienza un nuevo archivo real llamado "stdc-predef.h" cuyo path en mi sistema operativo es "/usr/include/stdc-predef.h" con los flags 1 ya que comienza un nuevo archivo y tambien con los flags 3 y 4.
+  Por último se ve en la quinta línea como esta vez si comienza un nuevo archivo real llamado "stdc-predef.h" cuyo path en mi sistema operativo es "/usr/include/stdc-predef.h" con los flags 1 ya que comienza un nuevo archivo y tambien con los flags 3 y 4.  
+  El código de este archivo es el siguiente:
+  ~~~
+  #ifndef	_STDC_PREDEF_H
+  #define	_STDC_PREDEF_H	1
+
+  #ifdef __GCC_IEC_559
+  # if __GCC_IEC_559 > 0
+  #  define __STDC_IEC_559__		1
+  # endif
+  #else
+  # define __STDC_IEC_559__		1
+  #endif
+
+  #ifdef __GCC_IEC_559_COMPLEX
+  # if __GCC_IEC_559_COMPLEX > 0
+  #  define __STDC_IEC_559_COMPLEX__	1
+  # endif
+  #else
+  # define __STDC_IEC_559_COMPLEX__	1
+  #endif
+
+  #define __STDC_ISO_10646__		201706L
+
+  #endif
+  ~~~
     
 #### 2. Compilación 
     
