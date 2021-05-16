@@ -240,8 +240,48 @@ dejado por el paso anterior es necesario para el siguiente.
   ~~~
   En el código de hello5.c se puede ver que en la función printf hace falta un argumento de tipo int para reemplazar el %d, pero no se lo estamos pasando, y a su vez, no era un impedimento para que el código objeto se pueda linkear, por lo tanto no lo corregí en el punto anterior.  
   Entonces al printf necesitar un int para reemplazar el %d, previamente reservó un espacio en memoria del tamaño de un int, pero como no le asigné ningun valor, ese espacio de memoria se quedó con los 0 y 1 que habían quedado guardados antes de reservar dicho espacio.  
-  Por lo tanto la ejecución mostrará la interpretación de un int con los 0 y 1 alojados en ese espacio de memoria y eso es lo que podemos ver al ejecutarlo.
+  Por lo tanto la ejecución mostrará la interpretación de un int con los 0 y 1 alojados en ese espacio de memoria y eso es lo que podemos ver al ejecutarlo.  
+  
+  #### 4. Correción de Bug
+  a) Corregir en hello6.c y empezar de nuevo; verificar que funciona como se espera.  
+    
+  Al corregir hello6.c el código quedaría: 
+  ~~~
+  int printf(const char * restrict s, ...);
+  int main(void){
+  int i=42;
+  printf("La respuesta es %d\n",i);
+  }
+  ~~~
+  Luego repitiendo los pasos anteriores, generé el código preprocesado, el código assembler, el código objeto y finalmente el linkeo para generar hello6.ex. Al ejecutarlo funcionó como se esperaba imprimiendo lo siguiente:  
+  ~~~
+  La respuesta es 42
+  ~~~
 
-
+  #### 5. Remoción de prototipo
+  a) Escribir hello7.c, una nueva variante:
+  ~~~
+  int main(void){
+  int i=42;
+  printf("La respuesta es %d\n", i);
+  }
+  ~~~
+    
+  b) Explicar por qué funciona.  
+    
+  Al realizar todos los pasos anteriores para crear el ejecutable lo único que surge es un warning al ejecutar el comando "gcc hello7.i -std=c18 -S -o hello7.s", es decir, en tiempo de compilación, cuando se estaba traduciendo el código preprocesado a código assembler. El warning nos indica la declaración implícita de printf ya que no incluimos el prototipo de la función, ya sea incluyendo stdio.h o solamente el prototipo de printf (que lo removí para este punto).  
+  El warning:
+  ~~~
+  hello7.c: In function ‘main’:
+  hello7.c:3:2: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
+      3 |  printf("La respuesta es %d\n", i);
+        |  ^~~~~~
+  hello7.c:3:2: warning: incompatible implicit declaration of built-in function ‘printf’
+  hello7.c:1:1: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
+    +++ |+#include <stdio.h>
+      1 | int main(void){
+  ~~~
+  Esto funciona ya que por defecto el linker va a buscar en la biblioteca estandar de C, aunque nosotros no incluyamos el "stdio.h" en el código. Entonces al momento de compilar nos advierte con un warning que no encuentra el prototipo pero luego al linkear se va a buscar la función printf en la biblioteca estandar, el linker la encuentra, copia el código objeto de la función dentro de la bibioteca y lo pega en el código objeto de hello7.o para que termine siendo el ejecutable hello7.ex.  
+  En el caso de cuando el código llamaba a la función prontf, había un error en la fase de linkeo, ya que la buscaba en la biblioteca estandar de C y no encontraba dicha función.
 
 
