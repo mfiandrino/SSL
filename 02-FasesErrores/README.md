@@ -23,7 +23,7 @@ correspondiente a la siguiente secuencia de pasos. También en readme.md se
 vuelcan las conclusiones y se resuelven los puntos solicitados. Para claridad,
 mantener en readme.md la misma numeración de la secuencia de pasos.
 
-### 3.1 Secuencia de pasos
+### 3.1. Secuencia de pasos
 Se parte de un archivo fuente que es corregido y refinado en sucesivos pasos.
 Es importante no saltearse pasos para mantener la correlación, ya que el estado
 dejado por el paso anterior es necesario para el siguiente.  
@@ -386,4 +386,85 @@ dejado por el paso anterior es necesario para el siguiente.
     La respuesta es -370335740
     ~~~  
 
+### 3.2. Punto Extra  
+  a) Investigue sobre bibliotecas. ¿Qué son? ¿Se puden distribuir? ¿Son portables? ¿Cuáles son sus ventajas y desventajas?  
+    
+  Las bibliotecas son colecciones de archivos de código objeto, resultantes de la compilación de código de implementaciones funcionales en un determinado lenguaje de programación. Las bilbiotecas ayudan con funcionalidades al programador, ya que puede reutilizar lo que se haya desarrollado en las mismas.  
+  Las bibilotecas al ser código objeto, están compiladas para la arquitectura en donde fueron compiladas justamente. Una arquitectura diferente no entendería el código objeto, por lo tanto no son portables. La única manera sería que ambas computadoras tuvieran la misma arquitectura.  
+  **Ventajas:**  
+  * Ayudan a mantener prolijo y entendible el código al abstraer funcionalidades que utiliza el programador.
+  * Ayuda a la reutilización de código, ahorrandole tiempo y trabajo al programador.
+  * Suponen tener todas las funcionalidades bien testeadas.
+  * El creador de la biblioteca solo comparte el código objeto, así que puede ocultar la implementación en el lenguaje de programación que utilice
+    
+  **Desventajas:**
+  * El usuario de una biblioteca no puede ver las implementaciones de las funciones, solo sus contratos.
+  * No son portables
+    
+  b) Desarrolle y utilice la biblioteca studio.  
+    
+  * Para generar la biblioteca studio, primero creé "studio.c" con las funciones aritméticas básicas, sumar, restar y multiplicar. Su código es:  
+    ~~~
+    #include <stdio.h>
+    #include "studio.h"
 
+    float suma(float n1,float n2)
+    {
+        return n1+n2;
+    }
+
+    float resta(float n1,float n2)
+    {
+        return n1-n2;
+    }
+
+    float producto(float n1,float n2)
+    {
+        return n1*n2;
+    }
+    ~~~  
+  * Luego generé studio.o ,el código objeto de studio.c, con el comando "gcc studio.c -std=c18 -c -o studio.o".   
+
+  * Como una biblioteca es una colección de archivos de código objeto, también generé studio2.o, el código objeto de studio2.c, (que usamos durante el trabajo) con el comando "gcc studio2.c -std=c18 -c -o studio2.o".  
+
+  * Posteriormente junté ambos archivos con el comando "ar" quedando así: "ar cr studio.a studio.o studio2.o". El nombre de mi biblioteca quedó "studio.a".  
+
+  * Escribí el archivo para probar la biblioteca "pruebaStudio.c" cuyo código es:  
+    ~~~
+    #include <stdio.h>
+    #include "studio.h"
+
+    int main()
+    {
+        printf("La suma de 4.3 y 3.56 es: %.2f\n\n",suma(4.3,3.56));
+        prontf("No importa lo que escriba aca", 89);
+        return 0;
+    }
+    ~~~
+  * Generé el ejecutable de pruebaStudio.c con el comando "gcc pruebaStudio.c studio.a -o pruebaStudio.ex"
+  * Y por último ejecuté pruebaStudio.ex y el resultado fue:
+    ~~~
+    La suma de 4.3 y 3.56 es: 7.86
+
+    La respuesta es 89
+    ~~~
+
+## 4. Restricciones  
+* El programa ejemplo debe enviar por stdout la frase La respuesta es 42, el
+valor 42 debe surgir de una variable.  
+  
+## 5. Productos
+~~~
+DD-FasesErrores
+|-- readme.md
+|-- hello2.c
+|-- hello3.c
+|-- hello4.c
+|-- hello5.c
+|-- hello6.c
+|-- hello7.c
+|-- hello8.c
+|-- studio1.c
+|-- studio.h
+`-- studio2.c
+~~~
