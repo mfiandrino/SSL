@@ -203,4 +203,45 @@ dejado por el paso anterior es necesario para el siguiente.
   ~~~
 
   #### 3. Vinculación
-  a) 
+  a) Vincular hello4.o con la biblioteca estándar y generar el ejecutable.  
+    
+  Para vincular hello4.o puedo usar dos recursos:  
+  El primero es gcc, en este caso no le agrego ningun flag y como entrada le doy el código objeto. El comando sería "gcc hello4.o -std=c18 -o hello4.ex"  
+  El segundo es usando directamente el GNU Linker pasando como parametro el path a ciertas bibliotecas. El comando sería "ld /usr/lib/x86_64-linux-gnu/crti.o /usr/lib/x86_64-linux-gnu/crtn.o /usr/lib/x86_64-linux-gnu/crt1.o -lc hello4.o -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o hello4.ex"  
+    
+  En ambos casos surge el mismo problema. El linker no encuentra referencia a la función "prontf".
+  ~~~
+  /usr/bin/ld: hello4.o: in function `main':
+  hello4.c:(.text+0x20): undefined reference to `prontf'
+  collect2: error: ld returned 1 exit status
+  ~~~
+    
+  b) Corregir en hello5.c y generar el ejecutable. Solo corregir lo necesario para que vincule  
+    
+  El código de hello5.c quedaría:  
+  ~~~
+  int printf(const char * restrict s, ...);
+  int main(void){
+  int i=42;
+  printf("La respuesta es %d\n");
+  }
+  ~~~  
+  Una vez corregido para que vincule y utilizando cualquiera de los dos comandos anteriormente mencionados, genero el ejecutable "hello5.ex".
+
+  c) Ejecutar y analizar el resultado.  
+    
+  Para ejecutar hello5.ex uso el comando básico para ejecutar en consola "./hello5.ex" y los resultados después de ejecutarlo algunas veces son los siguientes:
+  ~~~
+  La respuesta es -320521304
+
+  La respuesta es 100127960
+
+  La respuesta es 907297064
+  ~~~
+  En el código de hello5.c se puede ver que en la función printf hace falta un argumento de tipo int para reemplazar el %d, pero no se lo estamos pasando, y a su vez, no era un impedimento para que el código objeto se pueda linkear, por lo tanto no lo corregí en el punto anterior.  
+  Entonces al printf necesitar un int para reemplazar el %d, previamente reservó un espacio en memoria del tamaño de un int, pero como no le asigné ningun valor, ese espacio de memoria se quedó con los 0 y 1 que habían quedado guardados antes de reservar dicho espacio.  
+  Por lo tanto la ejecución mostrará la interpretación de un int con los 0 y 1 alojados en ese espacio de memoria y eso es lo que podemos ver al ejecutarlo.
+
+
+
+
