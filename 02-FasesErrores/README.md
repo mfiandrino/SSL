@@ -38,7 +38,7 @@ dejado por el paso anterior es necesario para el siguiente.
   ~~~
   b) Preprocesar hello2.c, no compilar, y generar hello2.i. Analizar su contenido. ¿Qué conclusiones saca?  
      
-  Para solo preprocesar el archivo fuente tuve que agregar el flag -E al compilador gcc. Comando: "gcc hello2.c -E -o hello2.i"
+  Para solo preprocesar el archivo fuente tuve que agregar el flag -E al compilador gcc. Comando: "gcc hello2.c -E -std=c18 -o hello2.i"
   
   Una vez preprocesado el archivo fuente, se puede ver que no hubo errores en tiempo de preprocesamiento. Lo que se puede oberservar en el nuevo archivo hello2.i es:  
   * En el lugar del #include <stdio.h> el preprocesador copió y pegó los contratos o las declaraciones de todas las funciones y variables de stdio.h.  
@@ -109,5 +109,98 @@ dejado por el paso anterior es necesario para el siguiente.
   #endif
   ~~~
     
-#### 2. Compilación 
+  #### 2. Compilación
+  a) Compilar el resultado y generar hello3.s, no ensamblar.  
     
+  Para solo compilar el archivo fuente sin ejecutar el ensamblador tuve que agregar el flag -S al compilador gcc. Comando: "gcc hello3.c -S -std=c18 -o hello3.s" o "gcc hello3.i -S -std=c18 -o hello3.s". Partir del hello3.c o del hello3.i (preprocesado) genera el mismo codigo assembler.  
+  Al compilar se generan los siguientes warnings y errores:  
+  ~~~
+  $ gcc hello3.c -s -std=c18 -o hello3.s
+  hello3.c: In function ‘main’:
+  hello3.c:4:2: warning: implicit declaration of function ‘prontf’; did you mean ‘printf’? [-Wimplicit-function-declaration]
+    4 |  prontf("La respuesta es %d\n");
+      |  ^~~~~~
+      |  printf
+  hello3.c:4:2: error: expected declaration or statement at end of input
+  ~~~  
+
+  b) Corregir solo los errores, no los warnings, en el nuevo archivo hello4.c y empezar de nuevo, generar hello4.s, no ensamblar.  
+
+  Corrigiendo el error de la falta de la llave para cerrar la función main, el código de hello4.c queda:
+  ~~~
+  int printf(const char * restrict s, ...);
+  int main(void){
+  int i=42;
+   prontf("La respuesta es %d\n");
+  }
+  ~~~  
+  Y para generar el hello4.s utilizo el comando "gcc hello4.c -S -std=c18 -o hello4.s" o "gcc hello4.i -S -std=c18 -o hello4.s" que, como mencionamos anteriormente, generan el mismo código assembler.  
+  El código de hello4.s es:
+  ~~~
+      .file	"hello4.c"
+    .text
+    .section	.rodata
+  .LC0:
+    .string	"La respuesta es %d\n"
+    .text
+    .globl	main
+    .type	main, @function
+  main:
+  .LFB0:
+    .cfi_startproc
+    endbr64
+    pushq	%rbp
+    .cfi_def_cfa_offset 16
+    .cfi_offset 6, -16
+    movq	%rsp, %rbp
+    .cfi_def_cfa_register 6
+    subq	$16, %rsp
+    movl	$42, -4(%rbp)
+    leaq	.LC0(%rip), %rdi
+    movl	$0, %eax
+    call	prontf@PLT
+    movl	$0, %eax
+    leave
+    .cfi_def_cfa 7, 8
+    ret
+    .cfi_endproc
+  .LFE0:
+    .size	main, .-main
+    .ident	"GCC: (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0"
+    .section	.note.GNU-stack,"",@progbits
+    .section	.note.gnu.property,"a"
+    .align 8
+    .long	 1f - 0f
+    .long	 4f - 1f
+    .long	 5
+  0:
+    .string	 "GNU"
+  1:
+    .align 8
+    .long	 0xc0000002
+    .long	 3f - 2f
+  2:
+    .long	 0x3
+  3:
+    .align 8
+  4:
+  ~~~
+
+  c) Leer hello4.s, investigar sobre lenguaje ensamblador,e indicar de forma sintética cual es el objetivo de ese código.  
+    
+  El objetivo de este código es en principio identificar el main, luego con algunos registros como el stack pointer y el base pointer entre otros, guardar el valor de la variable i. Con la funcion prontf, su objetivo es distinguir y separar lo que es el argumento de la función y lo que es el nombre de la función. Luego llama a dicha función con la instrucción "call" + su nombre y por otro lado, le pasa su argumento.  
+    
+  d) Ensamblar hello4.s en hello4.o, no vincular.  
+    
+  Para solo ensamblar el código usando gcc, uso el flag -c, que en realidad hace los dos pasos anteriores (preprocesar,compilar) y ademas ensambla el código assembler para dejar el código objeto sin linkear. El comando sería: "gcc hello4.s -c -std=c18 -o hello4.o".  
+  Otra manera de ensamblar el código pasando por alto gcc es usando el GNU assembler, que el comando para ensamblarlo sería: "as hello4.s -o hello4.o"  
+  El resultado generó el código objeto de hello4.o, que como es binario en código máquina, no podemos interpretarlo con vscode ni con un editor de texto. En un fragmento de dicho código interpretado por el editor de texto se puede distinguir pocas cosas como por ejemplo el argumento del prontf, pero no mucho mas. Se ve así:
+  ~~~
+  ELF\00\00\00\00\00\00\00\00\00\00>\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\000\00\00\00\00\00\00\00\00\00\00@\00\00\00\00\00@\00\00
+  \00\F3\FAUH\89\E5H\83\EC\C7E\FC*\00\00\00H\8D=\00\00\00\00\B8\00\00\00\00\E8\00\00\00\00\B8\00\00\00\00\C9\C3La respuesta es %d
+  \00\00GCC: (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00GNU\00\00\00\C0\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00zR\00x\90\00\00\00\00\00\00\00\00\00\00\00\00+\00\00\00\00E\86C
+  b
+  ~~~
+
+  #### 3. Vinculación
+  a) 
